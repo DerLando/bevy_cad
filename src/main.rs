@@ -1,4 +1,7 @@
-use bevy::prelude::*;
+mod camera;
+
+use bevy::{diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin}, prelude::*};
+use camera::PanOrbitCameraPlugin;
 
 fn main() {
     let mut app = App::build();
@@ -6,7 +9,11 @@ fn main() {
         .add_plugins(DefaultPlugins);
     #[cfg(target_arch = "wasm32")]
     app.add_plugin(bevy_webgl2::WebGL2Plugin);
-    app.add_startup_system(setup.system()).run();
+    app.add_startup_system(setup.system());
+    app.add_plugin(LogDiagnosticsPlugin::default());
+    app.add_plugin(FrameTimeDiagnosticsPlugin::default());
+    app.add_plugin(PanOrbitCameraPlugin)
+    .run();
 }
 
 /// set up a simple 3D scene
@@ -35,9 +42,11 @@ fn setup(
         ..Default::default()
     });
     // camera
-    commands.spawn_bundle(PerspectiveCameraBundle {
-        transform: Transform::from_translation(Vec3::new(-2.0, 2.5, 5.0))
-            .looking_at(Vec3::default(), Vec3::Y),
-        ..Default::default()
-    });
+    // commands.spawn_bundle(PerspectiveCameraBundle {
+    //     transform: Transform::from_translation(Vec3::new(-2.0, 2.5, 5.0))
+    //         .looking_at(Vec3::default(), Vec3::Y),
+    //     ..Default::default()
+    // });
+
+    PanOrbitCameraPlugin::spawn_camera(commands, Vec3::new(-2.0, 2.5, 5.0), Vec3::ZERO, Vec3::Y);
 }
