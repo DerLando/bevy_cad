@@ -11,7 +11,7 @@ impl Plugin for PanOrbitCameraPlugin {
 }
 
 impl PanOrbitCameraPlugin {
-    pub(crate) fn spawn_camera(mut commands: Commands, position: Vec3, target: Vec3, up: Vec3) {
+    pub(crate) fn spawn_camera(mut commands: &mut Commands, position: Vec3, target: Vec3, up: Vec3) {
         let radius = position.length();
     
         commands.spawn_bundle(PerspectiveCameraBundle {
